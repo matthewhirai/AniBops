@@ -1,0 +1,21 @@
+{
+  "name": "ani-bops",
+  "version": "1.0.0",
+  "description": "Web application for users to search for any anime theme song from MyAnimeList just by searching for the anime title.  This application is powered by the Jikan API and Spotify API.\r You can check out the web app [here](https://ani-bops.herokuapp.com/).\\\r *Note: In order for the Spotify links to appear you must email me (mhirai301@gmail.com) with your full name and spotify account email so that I can give you access.*",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matthewhirai/ani-bops.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matthewhirai/ani-bops/issues"
+  },
+  "homepage": "https://github.com/matthewhirai/ani-bops#readme"
+}
