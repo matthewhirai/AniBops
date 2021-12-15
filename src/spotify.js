@@ -97,12 +97,8 @@ function handleTrackResponse() {
 		//artist
 		outerLoop: for (const [key, value] of Object.entries(dict)) {
 			for (let i = 0; i < value.length; i++) {
-				if (
-					value[i].name
-						.substring(0, 2)
-						.toLowerCase()
-						.includes(gArtist.substring(0, 2).toLowerCase())
-				) {
+				if (value[i].name.substring(0, 2).toLowerCase().includes(gArtist.substring(0, 2).toLowerCase()) ||
+					gArtist.toLowerCase().includes(value[i].name.substring(0, 4).toLowerCase())) {
 					url = data.tracks.items[key].external_urls.spotify;
 					addTrack(url);
 					valid = true;
