@@ -1,8 +1,8 @@
-var gTitle = "";
-var eTitle = "";
-var gArtist = "";
-var translationT = "";
-var translationA = "";
+var gTitle = '@&';
+var eTitle = '@&';
+var gArtist = '@&';
+var translationT = '@&';
+var translationA = '@&';
 var count = 0;
 
 const TOKEN = "https://accounts.spotify.com/api/token";
@@ -13,6 +13,7 @@ function fetchTracks(song) {
 	var regExp = /\(([^)]+)\)/;
 	var alphabet =
 		/[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/;
+	song = song.trim()
 	let title = song.split(" by ")[0];
 	let artist = song.split(" by ")[1];
 
@@ -20,8 +21,34 @@ function fetchTracks(song) {
 		title = title.replace("&nbsp;", "");
 	}
 
+	// for Tonikaku Kawaii
+	if (title.includes('Koi no')) {
+		title = 'Koino Uta'
+	}
+
 	if (artist.includes("&nbsp;")) {
 		artist = artist.replace("&nbsp;", "");
+	}
+
+	if (artist.includes('feat.')) {
+		artist = artist.substr(0, artist.indexOf('feat.'))
+	}
+
+	// Vivy: Fluorite Eye's Song
+	if (artist.includes('Vivy')) {
+		artist = 'ヴィヴィ(Vo.八木海莉)'
+	}
+
+	if (artist.includes('Estella')) {
+		artist = 'エステラ(Vo.六花)'
+	}
+
+	if (song == 'Galaxy Anthem by Vivy (Kairi Yagi)') {
+		artist = 'ディーヴァ(Vo.八木海莉)'
+	}
+
+	if (song == 'Happy Together by General-Purpose Diva AI (Miya Kotsuki)') {
+		artist = '汎用型歌姫AI(Vo.コツキミヤ)'
 	}
 
 	gTitle = title;
@@ -103,13 +130,10 @@ function handleTrackResponse() {
 					addTrack(url);
 					valid = true;
 					break outerLoop;
-				} else if (translationA.length > 0) {
+				} 
+				else if (translationA.length > 0) {
 					// Check if there is a japanese translation
-					if (
-						alphabet.test(translationA) === true &&
-						translationA.includes(value[i].name) &&
-						alphabet.test(value[i].name) === true
-					) {
+					if (alphabet.test(translationA) === true && translationA.includes(value[i].name) && alphabet.test(value[i].name) === true) {
 						url = data.tracks.items[key].external_urls.spotify;
 						addTrack(url);
 						valid = true;
@@ -120,17 +144,10 @@ function handleTrackResponse() {
 		}
 
 		if (valid == false) {
-			if (Object.keys(dict).length > 0) {
-				var key = Object.keys(dict)[0];
-				if (alphabet.test(dict[key][0].name[0]) === true) {
-					url = data.tracks.items[key].external_urls.spotify;
-					addTrack(url);
-				}
-			} 
 			if (count != 0) {
 				count = 0;
 			} 
-			else if (eTitle.length > 0 && gArtist.length > 0) {
+			else if (eTitle != '@&' && eTitle.length > 0) {
 				url = SEARCH + `?q=${eTitle}&type=track`;
 				count++;
 				callApi("GET", url, null, handleTrackResponse);
