@@ -34,23 +34,6 @@ function fetchTracks(song) {
 		artist = artist.substr(0, artist.indexOf('feat.'))
 	}
 
-	// Vivy: Fluorite Eye's Song
-	if (artist.includes('Vivy')) {
-		artist = 'ヴィヴィ(Vo.八木海莉)'
-	}
-
-	if (artist.includes('Estella')) {
-		artist = 'エステラ(Vo.六花)'
-	}
-
-	if (song == 'Galaxy Anthem by Vivy (Kairi Yagi)') {
-		artist = 'ディーヴァ(Vo.八木海莉)'
-	}
-
-	if (song == 'Happy Together by General-Purpose Diva AI (Miya Kotsuki)') {
-		artist = '汎用型歌姫AI(Vo.コツキミヤ)'
-	}
-
 	gTitle = title;
 	gArtist = artist;
 
@@ -85,6 +68,23 @@ function fetchTracks(song) {
 			artist = artist.split(": ")[1];
 		}
 		translationA = artist;
+	}
+
+	// Vivy: Fluorite Eye's Song
+	if (artist.includes('Vivy')) {
+		artist = 'ヴィヴィ(Vo.八木海莉)'
+	}
+	
+	if (artist.includes('Estella')) {
+		artist = 'エステラ(Vo.六花)'
+	}
+	
+	if (song == 'Galaxy Anthem by Vivy (Kairi Yagi)') {
+		artist = 'ディーヴァ(Vo.八木海莉)'
+	}
+	
+	if (song == 'Happy Together by General-Purpose Diva AI (Miya Kotsuki)') {
+		artist = '汎用型歌姫AI(Vo.コツキミヤ)'
 	}
 
 	if (title.length > 0 && artist.length > 0) {
