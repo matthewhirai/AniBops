@@ -1,8 +1,8 @@
-var gTitle = '@&';
-var eTitle = '@&';
-var gArtist = '@&';
-var translationT = '@&';
-var translationA = '@&';
+var originalTitle = '@&';
+var englishTitle = '@&';
+var originalArtist = '@&';
+var translationTitle = '@&';
+var translationArtistrtist = '@&';
 var count = 0;
 
 const TOKEN = "https://accounts.spotify.com/api/token";
@@ -65,17 +65,17 @@ function fetchTracks(song) {
 		artist = '福原 遥'
 	}
 
-	gTitle = title;
-	gArtist = artist;
+	originalTitle = title;
+	originalArtist = artist;
 
 	if (title.includes("(")) {
 		var translation = regExp.exec(title);
 		// Checks if str inside () is japanese
 		if (japanese.test(translation[1]) === true) {
 			title = translation[1];
-			translationT = title;
+			translationTitle = title;
 		}
-		eTitle = title.substr(0, title.indexOf(translation[0]))
+		englishTitle = title.substr(0, title.indexOf(translation[0]))
 	}
 
 	if (title.includes("#")) {
@@ -83,20 +83,20 @@ function fetchTracks(song) {
 	}
 
 	// Check if there is an ou in the title and set the english title to that
-	if (gTitle.includes("ou")) {
-		gTitle = gTitle.replace("ou", "o");
-		if (gTitle.includes("(")) {
-			eTitle = gTitle.split(" (")[0];
+	if (originalTitle.includes("ou")) {
+		originalTitle = originalTitle.replace("ou", "o");
+		if (originalTitle.includes("(")) {
+			englishTitle = originalTitle.split(" (")[0];
 		} else {
-			title = gTitle; // if there is no translation then set the title to new gTitle w/o 'ou'
+			title = originalTitle; // if there is no translation then set the title to new originalTitle w/o 'ou'
 		}
 	}
 
 	// remove feat from title
 	if (title.includes('feat.')) {
 		title = title.substr(0, title.indexOf('feat.'))
-		gTitle = title
-		translationT = title
+		originalTitle = title
+		translationTitle = title
 	}
 
 	if (artist.includes("(")) {
@@ -105,7 +105,7 @@ function fetchTracks(song) {
 		if (artist.includes(": ")) {
 			artist = artist.split(": ")[1];
 		}
-		translationA = artist;
+		translationArtist = artist;
 	}
 
 	if (title.length > 0 && artist.length > 0) {
@@ -133,9 +133,9 @@ function handleTrackResponse() {
 
 		//title
 		for (let i = 0; i < data.tracks.items.length; i++) {
-			if (data.tracks.items[i].name.toLowerCase().includes(gTitle.toLowerCase()) ||
-				data.tracks.items[i].name.toLowerCase().includes(eTitle.toLowerCase()) ||
-				data.tracks.items[i].name.includes(translationT.substring(0, 2))) {
+			if (data.tracks.items[i].name.toLowerCase().includes(originalTitle.toLowerCase()) ||
+				data.tracks.items[i].name.toLowerCase().includes(englishTitle.toLowerCase()) ||
+				data.tracks.items[i].name.includes(translationTitle.substring(0, 2))) {
 				dict[i] = data.tracks.items[i].artists;
 			}
 		}
@@ -143,17 +143,17 @@ function handleTrackResponse() {
 		//artist
 		outerLoop: for (const [key, value] of Object.entries(dict)) {
 			for (let i = 0; i < value.length; i++) {
-				if (value[i].name.toLowerCase().includes(gArtist.toLowerCase()) ||
-					value[i].name.toLowerCase().includes(gArtist.substring(0, 3).toLowerCase()) ||
-					value[i].name.toLowerCase().includes(translationA.toLowerCase())) {
+				if (value[i].name.toLowerCase().includes(originalArtist.toLowerCase()) ||
+					value[i].name.toLowerCase().includes(originalArtist.substring(0, 3).toLowerCase()) ||
+					value[i].name.toLowerCase().includes(translationArtist.toLowerCase())) {
 					url = data.tracks.items[key].external_urls.spotify;
 					addTrack(url);
 					valid = true;
 					break outerLoop;
 				} 
-				else if (translationA.length > 0) {
+				else if (translationArtist.length > 0) {
 					// Check if there is a japanese translation
-					if (japanese.test(translationA) === true && translationA.includes(value[i].name) && japanese.test(value[i].name) === true) {
+					if (japanese.test(translationArtist) === true && translationArtist.includes(value[i].name) && japanese.test(value[i].name) === true) {
 						url = data.tracks.items[key].external_urls.spotify;
 						addTrack(url);
 						valid = true;
@@ -167,8 +167,8 @@ function handleTrackResponse() {
 			if (count != 0) {
 				count = 0;
 			} 
-			else if (eTitle != '@&' && eTitle.length > 0) {
-				url = SEARCH + `?q=${eTitle}&type=track`;
+			else if (englishTitle != '@&' && englishTitle.length > 0) {
+				url = SEARCH + `?q=${englishTitle}&type=track`;
 				count++;
 				callApi("GET", url, null, handleTrackResponse);
 			}
