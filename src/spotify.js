@@ -11,8 +11,7 @@ const SEARCH = "https://api.spotify.com/v1/search";
 
 function fetchTracks(song) {
 	var regExp = /\(([^)]+)\)/;
-	var alphabet =
-		/[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/;
+	var japanese = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/;
 	song = song.trim()
 	let title = song.split(" by ")[0];
 	let artist = song.split(" by ")[1];
@@ -34,6 +33,11 @@ function fetchTracks(song) {
 		artist = artist.substr(0, artist.indexOf('feat.'))
 	}
 
+	if (artist.includes('uu')) {
+		let index = artist.indexOf('uu')
+		artist = artist.replace(artist[index],'')
+	}
+
 	// Vivy: Fluorite Eye's Song
 	if (artist.includes('Vivy')) {
 		artist = 'ヴィヴィ(Vo.八木海莉)'
@@ -51,13 +55,23 @@ function fetchTracks(song) {
 		artist = '汎用型歌姫AI(Vo.コツキミヤ)'
 	}
 
+	// Love is War S1/S2
+	if (title == 'Chikatto Chika Chika♡ (チカっとチカ千花っ♡)') {
+		title = 'Chikatto Chika Chika'
+		artist = 'Konomi Kohara'
+	}
+	
+	if (artist == 'Haruka Fukuhara') {
+		artist = '福原 遥'
+	}
+
 	gTitle = title;
 	gArtist = artist;
 
 	if (title.includes("(")) {
 		var translation = regExp.exec(title);
-		// Checks if str inside () is english
-		if (alphabet.test(translation[1]) === true) {
+		// Checks if str inside () is japanese
+		if (japanese.test(translation[1]) === true) {
 			title = translation[1];
 			translationT = title;
 		}
@@ -78,6 +92,13 @@ function fetchTracks(song) {
 		}
 	}
 
+	// remove feat from title
+	if (title.includes('feat.')) {
+		title = title.substr(0, title.indexOf('feat.'))
+		gTitle = title
+		translationT = title
+	}
+
 	if (artist.includes("(")) {
 		artist = regExp.exec(artist);
 		artist = artist[1];
@@ -89,7 +110,6 @@ function fetchTracks(song) {
 
 	if (title.length > 0 && artist.length > 0) {
 		url = SEARCH + `?q=${title}&type=track`;
-		console.log(url);
 		callApi("GET", url, null, handleTrackResponse);
 	}
 }
@@ -109,13 +129,12 @@ function handleTrackResponse() {
 		var valid = false;
 		var url = "";
 		var dict = {}; //all artists with track title
-		var alphabet =
-			/[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/;
+		var japanese = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/;
 
 		//title
 		for (let i = 0; i < data.tracks.items.length; i++) {
-			if (data.tracks.items[i].name.toLowerCase().includes(gTitle.substring(0, 2).toLowerCase()) ||
-				gTitle.substring(0, 2).toLowerCase().includes(data.tracks.items[i].name.toLowerCase()) ||
+			if (data.tracks.items[i].name.toLowerCase().includes(gTitle.toLowerCase()) ||
+				data.tracks.items[i].name.toLowerCase().includes(eTitle.toLowerCase()) ||
 				data.tracks.items[i].name.includes(translationT.substring(0, 2))) {
 				dict[i] = data.tracks.items[i].artists;
 			}
@@ -124,8 +143,9 @@ function handleTrackResponse() {
 		//artist
 		outerLoop: for (const [key, value] of Object.entries(dict)) {
 			for (let i = 0; i < value.length; i++) {
-				if (value[i].name.substring(0, 2).toLowerCase().includes(gArtist.substring(0, 2).toLowerCase()) ||
-					gArtist.toLowerCase().includes(value[i].name.substring(0, 4).toLowerCase())) {
+				if (value[i].name.toLowerCase().includes(gArtist.toLowerCase()) ||
+					value[i].name.toLowerCase().includes(gArtist.substring(0, 3).toLowerCase()) ||
+					value[i].name.toLowerCase().includes(translationA.toLowerCase())) {
 					url = data.tracks.items[key].external_urls.spotify;
 					addTrack(url);
 					valid = true;
@@ -133,7 +153,7 @@ function handleTrackResponse() {
 				} 
 				else if (translationA.length > 0) {
 					// Check if there is a japanese translation
-					if (alphabet.test(translationA) === true && translationA.includes(value[i].name) && alphabet.test(value[i].name) === true) {
+					if (japanese.test(translationA) === true && translationA.includes(value[i].name) && japanese.test(value[i].name) === true) {
 						url = data.tracks.items[key].external_urls.spotify;
 						addTrack(url);
 						valid = true;
@@ -156,7 +176,6 @@ function handleTrackResponse() {
 		}
 	} 
 	else {
-		console.log(this.responseText);
 		alert(this.responseText);
 	}
 }
