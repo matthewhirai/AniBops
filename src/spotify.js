@@ -2,7 +2,7 @@ var originalTitle = '@&';
 var englishTitle = '@&';
 var originalArtist = '@&';
 var translationTitle = '@&';
-var translationArtistrtist = '@&';
+var translationArtist = '@&';
 var count = 0;
 
 const TOKEN = "https://accounts.spotify.com/api/token";
