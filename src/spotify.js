@@ -1,6 +1,7 @@
 var originalTitle = '@&';
 var englishTitle = '@&';
 var originalArtist = '@&';
+var englishArtist = '@&'
 var translationTitle = '@&';
 var translationArtist = '@&';
 var count = 0;
@@ -20,9 +21,34 @@ function fetchTracks(song) {
 		title = title.replace("&nbsp;", "");
 	}
 
-	// for Tonikaku Kawaii
+	// Adachi to Shimamura
+	if (title.includes('Kimi no Tonari de')) {
+		title = 'Kimi no Tonaride (キミのとなりで)'
+	}
+
+	if (title.includes('Kimi ni Aeta Hi (君に会えた日)')) {
+		title = 'Kimi ni Aetahi'
+		artist = 'Adachi(CV:Akari Kito)'
+	}
+
+	// Tonikaku Kawaii
 	if (title.includes('Koi no')) {
 		title = 'Koino Uta'
+	}
+
+	// Anohana 
+	if (title.includes ('secret base ~Kimi ga Kureta Mono~ (10 years after ver.)')) {
+		title = 'secret base ~君がくれたもの~ (10 years after Ver.)'
+		artist = '本間芽衣子 (CV.茅野愛衣)'
+	}
+
+	// Code Geass R2
+	if (title.includes('Shiawase Neiro (ｼｱﾜｾﾈｲﾛ)')) {
+		title = 'Shiawase Neiro (シアワセネイロ)'
+	}
+
+	if (title.includes('02~O-Two~ (02~ｵｰ･ﾂｰ~)')) {
+		title = 'O2'
 	}
 
 	if (artist.includes("&nbsp;")) {
@@ -30,7 +56,8 @@ function fetchTracks(song) {
 	}
 
 	if (artist.includes('feat.')) {
-		artist = artist.substr(0, artist.indexOf('feat.'))
+		artist = artist.substring(0, artist.indexOf('feat.'))
+		artist = artist.trim()
 	}
 
 	if (artist.includes('uu')) {
@@ -75,7 +102,7 @@ function fetchTracks(song) {
 			title = translation[1];
 			translationTitle = title;
 		}
-		englishTitle = title.substr(0, title.indexOf(translation[0]))
+		englishTitle = originalTitle.substring(0, originalTitle.indexOf(translation[0])).trim()
 	}
 
 	if (title.includes("#")) {
@@ -92,20 +119,28 @@ function fetchTracks(song) {
 		}
 	}
 
+	if (originalArtist.includes("ou")) {
+		originalArtist = originalArtist.replace("ou", "o");
+		artist = originalArtist
+	}
+
 	// remove feat from title
 	if (title.includes('feat.')) {
-		title = title.substr(0, title.indexOf('feat.'))
+		title = title.substring(0, title.indexOf('feat.'))
 		originalTitle = title
 		translationTitle = title
 	}
 
 	if (artist.includes("(")) {
-		artist = regExp.exec(artist);
-		artist = artist[1];
-		if (artist.includes(": ")) {
-			artist = artist.split(": ")[1];
+		var translation = regExp.exec(artist);
+		if (japanese.test(translation[1]) == true) {
+			translationArtist = translation[1]
 		}
-		translationArtist = artist;
+		// if there's a CV: 
+		if (translationArtist.includes(": ")) {
+			translationArtist = translationArtist.split(": ")[1];
+		}
+		englishArtist = originalArtist.substring(0, originalArtist.indexOf(translation[0])).trim()
 	}
 
 	if (title.length > 0 && artist.length > 0) {
@@ -131,6 +166,18 @@ function handleTrackResponse() {
 		var dict = {}; //all artists with track title
 		var japanese = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/;
 
+		// Anohana
+		if (originalTitle == 'Dear Love' && originalArtist == 'Remedios') {
+			addTrack('https://open.spotify.com/track/4XFgQTD5BjQs583I7rGk9G');
+			valid = true;
+		}
+
+		// Code Geass
+		if (originalTitle == 'Kaidoku Funo (解読不能)' && originalArtist == 'Jinn') {
+			addTrack('https://open.spotify.com/track/1U6bUEJTB3EPbedb0VwgHe')
+			valid = true
+		}
+
 		//title
 		for (let i = 0; i < data.tracks.items.length; i++) {
 			if (data.tracks.items[i].name.toLowerCase().includes(originalTitle.toLowerCase()) ||
@@ -144,8 +191,8 @@ function handleTrackResponse() {
 		outerLoop: for (const [key, value] of Object.entries(dict)) {
 			for (let i = 0; i < value.length; i++) {
 				if (value[i].name.toLowerCase().includes(originalArtist.toLowerCase()) ||
-					value[i].name.toLowerCase().includes(originalArtist.substring(0, 3).toLowerCase()) ||
-					value[i].name.toLowerCase().includes(translationArtist.toLowerCase())) {
+					value[i].name.toLowerCase().includes(translationArtist.toLowerCase()) ||
+					value[i].name.toLowerCase().includes(englishArtist.toLowerCase())) {
 					url = data.tracks.items[key].external_urls.spotify;
 					addTrack(url);
 					valid = true;
