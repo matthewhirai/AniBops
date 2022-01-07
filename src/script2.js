@@ -6,18 +6,18 @@ function onLoad() {
 }
 
 function search(anime) {
-	fetch(`https://api.jikan.moe/v3/search/anime?q=${anime}&limit=20`)
+	fetch(`https://api.jikan.moe/v4/anime?q=${anime}&limit=20`)
 		.then(function (response) {
 			return response.json();
 		})
 		.then(function (respData) {
-			for (let i = 0; i < respData.results.length; i++) {
-				if (respData.results[i].type !== "Music") {
+			for (let i = 0; i < respData.data.length; i++) {
+				if (respData.data[i].type !== "Music") {
 					var titles = document.createElement("H2");
-					titles.setAttribute("id", respData.results[i].mal_id);
+					titles.setAttribute("id", respData.data[i].mal_id);
 					titles.setAttribute("onclick", "music(id); event.cancelBubble=true;");
 					titles.setAttribute("name", clicks);
-					var title = respData.results[i].title;
+					var title = respData.data[i].title;
 					titles.innerHTML = title;
 					document.getElementById("results").appendChild(titles);
 				}
@@ -31,13 +31,13 @@ function music(id) {
 	document.getElementById(id).setAttribute("name", count);
 
 	if (count % 2 !== 0) {
-		fetch(`https://api.jikan.moe/v3/anime/${id}`)
+		fetch(`https://api.jikan.moe/v4/anime/${id}/themes`)
 			.then(function (response) {
 				return response.json();
 			})
 			.then(function (respData) {
-				var opening = respData.opening_themes;
-				var ending = respData.ending_themes;
+				var opening = respData.data.openings;
+				var ending = respData.data.endings;
 				var all = opening.concat(ending);
 
 				//removes the element that just consists of artists and empty songs
