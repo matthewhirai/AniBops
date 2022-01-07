@@ -1,5 +1,5 @@
 # Ani-Bops
-Web application for users to search for any anime theme song from MyAnimeList just by searching for the anime title.  If the song is on Spotify, it will give you the link. This application is powered by the Jikan API and Spotify API.
+Web application for users to search for any anime theme song from MyAnimeList just by searching for the anime title.  This application is powered by the Jikan API and Spotify API.
 You can check out the web app [here](https://ani-bops.herokuapp.com/).
 
 ## Demo
