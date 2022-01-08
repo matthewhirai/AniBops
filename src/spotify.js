@@ -32,7 +32,7 @@ function fetchTracks(song) {
 
 	if (artist.includes('uu')) {
 		let index = artist.indexOf('uu');
-		artist = artist.replace(artist[index], '');
+		artist = artist.slice(0, index) + artist.slice(index + 1);
 	}
 
 	// Adachi to Shimamura
@@ -95,6 +95,11 @@ function fetchTracks(song) {
 	// AOT S3
 	if (title.includes('Akatsuki no Chinkonka')) {
 		title = 'Akatsuki no Requiem (暁の鎮魂歌)';
+	}
+
+	// Houkago Teibou Nisshi
+	if (artist.includes('Umino High School Teibou-bu')) {
+		artist = '海野高校ていぼう部:鶴木陽渚(CV:高尾奏音), 帆高夏海(CV:川井田夏海),黒岩悠希(CV:篠原侑),大野真(CV:明坂聡美)';
 	}
 
 	originalTitle = title;
