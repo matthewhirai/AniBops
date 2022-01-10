@@ -1,30 +1,30 @@
 function setSearchValue() {
-	var b = document.getElementById("search").value
-	sessionStorage.setItem("item", b);
+	let b = document.getElementById('search').value;
+	sessionStorage.setItem('item', b);
 }
 
 function grabSearchInput(id) {
-	var title = document.getElementById(id).innerHTML;
-	document.getElementById("search").value = title;
+	let title = document.getElementById(id).innerHTML;
+	document.getElementById('search').value = title;
 }
 
 function myFunction(id) {
-	document.getElementById(id).classList.toggle("show");
+	document.getElementById(id).classList.toggle('show');
 }
 
 function topAnime() {
 	fetch(`https://api.jikan.moe/v3/search/anime?status=airing&score=7&limit=12`)
-		.then(function (response) {
+		.then(function(response) {
 			return response.json();
 		})
-		.then(function (respData) {
+		.then(function(respData) {
 			for (let i = 0; i < 12; i++) {
-				var titles = document.createElement("li");
-				titles.setAttribute("id", respData.results[i].title);
-				titles.setAttribute("onclick", "grabSearchInput(id)");
-				var title = respData.results[i].title;
+				let titles = document.createElement('li');
+				titles.setAttribute('id', respData.results[i].title);
+				titles.setAttribute('onclick', 'grabSearchInput(id)');
+				let title = respData.results[i].title;
 				titles.innerHTML = title;
-				document.getElementById("top").appendChild(titles);
+				document.getElementById('top').appendChild(titles);
 			}
 		});
 }

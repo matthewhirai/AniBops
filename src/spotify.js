@@ -1,18 +1,18 @@
-var originalTitle = '@&';
-var englishTitle = '@&';
-var originalArtist = '@&';
-var englishArtist = '@&';
-var translationTitle = '@&';
-var translationArtist = '@&';
-var count = 0;
+let originalTitle = '@&';
+let englishTitle = '@&';
+let originalArtist = '@&';
+let englishArtist = '@&';
+let translationTitle = '@&';
+let translationArtist = '@&';
+let count = 0;
 
+const japanese = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/;
 const TOKEN = 'https://accounts.spotify.com/api/token';
 const access_token = sessionStorage.getItem('token');
 const SEARCH = 'https://api.spotify.com/v1/search';
 
 function fetchTracks(song) {
-	var regExp = /\(([^)]+)\)/;
-	var japanese = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/;
+	const regExp = /\(([^)]+)\)/;
 	song = song.trim().replace('’', "'");
 	let title = song.split(' by ')[0];
 	let artist = song.split(' by ')[1];
@@ -106,7 +106,7 @@ function fetchTracks(song) {
 	originalArtist = artist;
 
 	if (title.includes('(')) {
-		var translation = regExp.exec(title);
+		let translation = regExp.exec(title);
 		// Checks if str inside () is japanese
 		if (japanese.test(translation[1]) === true) {
 			title = translation[1];
@@ -142,7 +142,7 @@ function fetchTracks(song) {
 	}
 
 	if (artist.includes('(')) {
-		var translation = regExp.exec(artist);
+		let translation = regExp.exec(artist);
 		if (japanese.test(translation[1]) == true) {
 			translationArtist = translation[1];
 		}
@@ -170,11 +170,10 @@ function callApi(method, url, body, callback) {
 
 function handleTrackResponse() {
 	if (this.status == 200) {
-		var data = JSON.parse(this.responseText);
-		var valid = false;
-		var url = '';
-		var dict = {}; //all artists with track title
-		var japanese = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/;
+		let data = JSON.parse(this.responseText);
+		let valid = false;
+		let url = '';
+		let dict = {}; //all artists with track title
 
 		// Anohana
 		if (originalTitle == 'Dear Love' && originalArtist == 'Remedios') {
@@ -248,14 +247,14 @@ function handleTrackResponse() {
 }
 
 function addTrack(url) {
-	var parent = document.getElementById('modal');
-	var link = document.createElement('a');
+	let parent = document.getElementById('modal');
+	let link = document.createElement('a');
 	link.setAttribute('href', url);
 	link.setAttribute('target', '_blank');
 	link.innerHTML = 'Spotify';
 	parent.appendChild(link);
 
-	var logo = document.createElement('img');
+	let logo = document.createElement('img');
 	logo.setAttribute('src', 'img/spotify-logo.png');
 	logo.setAttribute('id', 'logo');
 	link.appendChild(logo);
