@@ -13,16 +13,25 @@ function myFunction(id) {
 }
 
 function topAnime() {
-	fetch(`https://api.jikan.moe/v3/search/anime?status=airing&score=7&limit=12`)
+	let seasons = { 'Jan Feb Mar': 'winter', 'Apr Jun': 'spring', 'Jul Aug Sep': 'summer', 'Oct Nov Dec': 'fall' };
+	let today = new Date().toString();
+	let keys = Object.keys(seasons);
+	const match = keys.find((element) => {
+		if (element.includes(today.substring(4, 7))) {
+			return true;
+		}
+	});
+
+	fetch(`https://api.jikan.moe/v4/seasons/2022/${seasons[match]}?limit=12`)
 		.then(function(response) {
 			return response.json();
 		})
 		.then(function(respData) {
 			for (let i = 0; i < 12; i++) {
 				let titles = document.createElement('li');
-				titles.setAttribute('id', respData.results[i].title);
+				titles.setAttribute('id', respData.data[i].title);
 				titles.setAttribute('onclick', 'grabSearchInput(id)');
-				let title = respData.results[i].title;
+				let title = respData.data[i].title;
 				titles.innerHTML = title;
 				document.getElementById('top').appendChild(titles);
 			}
