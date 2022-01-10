@@ -154,7 +154,7 @@ function fetchTracks(song) {
 	}
 
 	if (title.length > 0 && artist.length > 0) {
-		url = SEARCH + `?q=${title}&type=track`;
+		url = SEARCH + `?q=${title}&type=track&market=JP`;
 		callApi('GET', url, null, handleTrackResponse);
 	}
 }
@@ -175,18 +175,6 @@ function handleTrackResponse() {
 		let url = '';
 		let dict = {}; //all artists with track title
 
-		// Anohana
-		if (originalTitle == 'Dear Love' && originalArtist == 'Remedios') {
-			addTrack('https://open.spotify.com/track/4XFgQTD5BjQs583I7rGk9G');
-			valid = true;
-		}
-
-		// Code Geass
-		if (originalTitle == 'Kaidoku Funo (解読不能)' && originalArtist == 'Jinn') {
-			addTrack('https://open.spotify.com/track/1U6bUEJTB3EPbedb0VwgHe');
-			valid = true;
-		}
-
 		//Vivy
 		if (originalTitle == 'Happy Together' && originalArtist == 'General-Purpose Diva AI (Miya Kotsuki)') {
 			addTrack('https://open.spotify.com/track/0q3Y33IbDD19oXx5qwHCxR');
@@ -196,9 +184,10 @@ function handleTrackResponse() {
 		//title
 		for (let i = 0; i < data.tracks.items.length; i++) {
 			if (
-				data.tracks.items[i].name.toLowerCase().includes(originalTitle.toLowerCase()) ||
-				data.tracks.items[i].name.toLowerCase().includes(englishTitle.toLowerCase()) ||
-				data.tracks.items[i].name.includes(translationTitle.substring(0, 2))
+				(data.tracks.items[i].name.toLowerCase().includes(originalTitle.toLowerCase()) ||
+					data.tracks.items[i].name.toLowerCase().includes(englishTitle.toLowerCase()) ||
+					data.tracks.items[i].name.includes(translationTitle.substring(0, 2))) &&
+				!data.tracks.items[i].name.toLowerCase().includes('tv size')
 			) {
 				dict[i] = data.tracks.items[i].artists;
 			}
