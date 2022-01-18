@@ -25,6 +25,10 @@ function fetchTracks(song) {
 		artist = artist.replace('&nbsp;', '');
 	}
 
+	if (artist.includes('&amp;')) {
+		artist = artist.replace('&amp;', '&');
+	}
+
 	if (artist.includes('feat.')) {
 		artist = artist.substring(0, artist.indexOf('feat.'));
 		artist = artist.trim();
@@ -100,6 +104,20 @@ function fetchTracks(song) {
 	// Houkago Teibou Nisshi
 	if (artist.includes('Umino High School Teibou-bu')) {
 		artist = '海野高校ていぼう部:鶴木陽渚(CV:高尾奏音), 帆高夏海(CV:川井田夏海),黒岩悠希(CV:篠原侑),大野真(CV:明坂聡美)';
+	}
+
+	// The End Girl Trip
+	if (artist.includes('Chito (Inori Minase) & Yuri (Yurika Kubo)')) {
+		artist = 'チト(CV:水瀬いのり) & ユーリ(CV:久保ユリカ)';
+	}
+
+	// Yuruyuri
+	if (artist.includes('Nanamori Chu☆')) {
+		artist = 'Nanamori-Chu☆Goraku-Bu';
+	}
+
+	if (artist.includes('Yui Funami (Minami Tsuda) & Chinatsu Yoshikawa (Rumi Ookubo)')) {
+		artist = '結衣(CV:津田美波) & "ちなつ(CV:大久保瑠美)"';
 	}
 
 	originalTitle = title;
@@ -198,8 +216,11 @@ function handleTrackResponse() {
 			for (let i = 0; i < value.length; i++) {
 				if (
 					value[i].name.toLowerCase().includes(originalArtist.toLowerCase()) ||
+					originalArtist.toLowerCase().includes(value[i].name.toLowerCase()) ||
 					value[i].name.toLowerCase().includes(translationArtist.toLowerCase()) ||
-					value[i].name.toLowerCase().includes(englishArtist.toLowerCase())
+					translationArtist.toLowerCase().includes(value[i].name.toLowerCase()) ||
+					value[i].name.toLowerCase().includes(englishArtist.toLowerCase()) ||
+					englishArtist.toLowerCase().includes(value[i].name.toLowerCase())
 				) {
 					url = data.tracks.items[key].external_urls.spotify;
 					addTrack(url);
