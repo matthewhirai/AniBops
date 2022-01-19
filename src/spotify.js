@@ -34,11 +34,6 @@ function fetchTracks(song) {
 		artist = artist.trim();
 	}
 
-	if (artist.includes('uu')) {
-		let index = artist.indexOf('uu');
-		artist = artist.slice(0, index) + artist.slice(index + 1);
-	}
-
 	// Adachi to Shimamura
 	if (title.includes('Kimi no Tonari de')) {
 		title = 'Kimi no Tonaride (キミのとなりで)';
@@ -191,6 +186,7 @@ function handleTrackResponse() {
 		let data = JSON.parse(this.responseText);
 		let valid = false;
 		let url = '';
+		let artistsWithoutUU = '@&';
 		let dict = {}; //all artists with track title
 
 		//Vivy
@@ -211,16 +207,24 @@ function handleTrackResponse() {
 			}
 		}
 
+		if (originalArtist.includes('uu')) {
+			let index = originalArtist.indexOf('uu');
+			artistsWithoutUU = originalArtist.slice(0, index) + originalArtist.slice(index + 1);
+		}
+
 		//artist
 		outerLoop: for (const [key, value] of Object.entries(dict)) {
 			for (let i = 0; i < value.length; i++) {
+				let spotifyName = value[i].name.toLowerCase();
 				if (
-					value[i].name.toLowerCase().includes(originalArtist.toLowerCase()) ||
-					originalArtist.toLowerCase().includes(value[i].name.toLowerCase()) ||
-					value[i].name.toLowerCase().includes(translationArtist.toLowerCase()) ||
-					translationArtist.toLowerCase().includes(value[i].name.toLowerCase()) ||
-					value[i].name.toLowerCase().includes(englishArtist.toLowerCase()) ||
-					englishArtist.toLowerCase().includes(value[i].name.toLowerCase())
+					spotifyName.includes(originalArtist.toLowerCase()) ||
+					originalArtist.toLowerCase().includes(spotifyName) ||
+					spotifyName.includes(translationArtist.toLowerCase()) ||
+					translationArtist.toLowerCase().includes(spotifyName) ||
+					spotifyName.includes(englishArtist.toLowerCase()) ||
+					englishArtist.toLowerCase().includes(spotifyName) ||
+					spotifyName.includes(artistsWithoutUU.toLowerCase()) ||
+					artistsWithoutUU.toLowerCase().includes(spotifyName)
 				) {
 					url = data.tracks.items[key].external_urls.spotify;
 					addTrack(url);
