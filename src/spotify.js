@@ -115,6 +115,19 @@ function fetchTracks(song) {
 		artist = '結衣(CV:津田美波) & "ちなつ(CV:大久保瑠美)"';
 	}
 
+	// Oregairu
+	if (artist === 'Nagi Yanagi') {
+		artist = '"yanaginagi"';
+	}
+
+	if (artist.includes('Yukino Yukinoshita (Saori Hayami)')) {
+		artist = '雪ノ下雪乃(CV.早見沙織)';
+	}
+
+	if (artist.includes('Yui Yuigahama (Nao Touyama)')) {
+		artist = '由比ヶ浜結衣(CV.東山奈央)';
+	}
+
 	originalTitle = title;
 	originalArtist = artist;
 
