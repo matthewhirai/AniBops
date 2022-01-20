@@ -45,7 +45,7 @@ function fetchTracks(song) {
 	}
 
 	// Tonikaku Kawaii
-	if (title.includes('Koi no')) {
+	if (title == 'Koi no Uta') {
 		title = 'Koino Uta';
 	}
 
@@ -65,6 +65,14 @@ function fetchTracks(song) {
 	}
 
 	// Vivy: Fluorite Eye's Song
+	if (song == 'Galaxy Anthem by Vivy (Kairi Yagi)') {
+		artist = 'ディーヴァ(Vo.八木海莉)';
+	}
+
+	if (title == "Flourite Eye's Song") {
+		title = "Fluorite Eye's Song";
+	}
+
 	if (artist.includes('Vivy')) {
 		artist = 'ヴィヴィ(Vo.八木海莉)';
 	}
@@ -73,12 +81,8 @@ function fetchTracks(song) {
 		artist = 'エステラ(Vo.六花)';
 	}
 
-	if (song == 'Galaxy Anthem by Vivy (Kairi Yagi)') {
-		artist = 'ディーヴァ(Vo.八木海莉)';
-	}
-
-	if (title == "Flourite Eye's Song") {
-		title = "Fluorite Eye's Song";
+	if (artist == 'General-Purpose Diva AI (Miya Kotsuki)') {
+		artist = '汎用型歌姫AI(Vo.コツキミヤ)';
 	}
 
 	// Love is War S1/S2
@@ -126,6 +130,23 @@ function fetchTracks(song) {
 
 	if (artist.includes('Yui Yuigahama (Nao Touyama)')) {
 		artist = '由比ヶ浜結衣(CV.東山奈央)';
+	}
+
+	// Takagi-san
+	if (song == 'Zero Centimeter by Yuiko Oohara') {
+		title = 'ゼロセンチメートル ';
+	}
+
+	if (title.includes('(奏（かなで）)')) {
+		title = title.replace('(奏（かなで）)', '"奏(かなで)"');
+	}
+
+	if (artist == 'Yuiko Oohara') {
+		artist = '大原ゆい子';
+	}
+
+	if (artist.includes('Takagi-san')) {
+		artist = '高木さん(CV:高橋李依)';
 	}
 
 	originalTitle = title;
@@ -180,7 +201,7 @@ function fetchTracks(song) {
 	}
 
 	if (title.length > 0 && artist.length > 0) {
-		url = SEARCH + `?q=${title}&type=track&market=JP`;
+		url = SEARCH + `?q=${title}&type=track&market=JP&limit=50`;
 		callApi('GET', url, null, handleTrackResponse);
 	}
 }
@@ -201,12 +222,6 @@ function handleTrackResponse() {
 		let url = '';
 		let artistsWithoutUU = '@&';
 		let dict = {}; //all artists with track title
-
-		//Vivy
-		if (originalTitle == 'Happy Together' && originalArtist == 'General-Purpose Diva AI (Miya Kotsuki)') {
-			addTrack('https://open.spotify.com/track/0q3Y33IbDD19oXx5qwHCxR');
-			valid = true;
-		}
 
 		//title
 		for (let i = 0; i < data.tracks.items.length; i++) {
