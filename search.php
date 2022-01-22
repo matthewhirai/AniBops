@@ -3,6 +3,7 @@
 <head>
 	<title>Ani-Bops</title>
 	<script src="src/script2.js"></script>
+	<script src="src/songRegExp.js"></script>
 	<script src="src/spotify.js"></script>
 	<link rel="shortcut icon" type="image/png" href="img/favicon.png" sizes="32x32">
 	<link rel="stylesheet" type="text/css" href="style.css">
