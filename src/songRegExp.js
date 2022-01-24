@@ -154,5 +154,10 @@ function deleteFromSong(title, artist, song) {
 		artist = 'Mononkvl';
 	}
 
+	// Sabage-bu!
+	if (artist == 'Ayaka Ohashi') {
+		artist = '大橋彩香'
+	}
+
 	return [title, artist];
 }
