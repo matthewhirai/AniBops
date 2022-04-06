@@ -159,5 +159,13 @@ function deleteFromSong(title, artist, song) {
 		artist = '大橋彩香'
 	}
 
+	// Nana
+	if (artist == "Anna inspi' Nana ~Black Stones~") {
+		artist = "ANNA TSUCHIYA inspi' NANA(BLACK STONES)"
+		if (title == 'Kuroi Namida') {
+			title = '黒い涙'
+		}
+	}
+
 	return [title, artist];
 }
