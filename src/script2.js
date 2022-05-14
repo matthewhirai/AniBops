@@ -54,7 +54,7 @@ function music(id) {
 					'No opening themes have been added to this title. Help improve our database by adding an opening theme here.',
 					'No ending themes have been added to this title. Help improve our database by adding an ending theme here.'
 				];
-				all = all.filter((i) => !removed.includes(i) && i.indexOf(' by ') !== -1);
+				all = all.filter((i) => !removed.includes(i) && i.indexOf('by') !== -1);
 
 				let uniq_tracks = [];
 				let track = '';
@@ -63,6 +63,13 @@ function music(id) {
 				if (all.length > 0) {
 					for (item in all) {
 						let song = all[item];
+						
+						// if the song doesn't have 'by' with spaces at start and end, this will add it
+						if (!(song[song.indexOf('by') - 1] === " " && song[song.indexOf('by') + 2] === " ")) {
+							p1 = song.split('by')[0].trim()
+							p2 = song.split('by')[1].trim()
+							song = p1 + " by " + p2
+						} 
 
 						if (song.indexOf(':') !== -1) {
 							let i = song.indexOf(':') - 1;
